@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bataille Navale</title>
+<style>
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(10, 30px);
+        grid-gap: 5px;
+    }
+    .cell {
+        width: 30px;
+        height: 30px;
+        border: 1px solid black;
+    }
+    .hit {
+        background-color: red;
+    }
+    .miss {
+        background-color: gray;
+    }
+</style>
+</head>
+<body>
+<h1>Bataille Navale</h1>
+<div id="grid" class="grid"></div>
+<button onclick="fire()">Fire!</button>
+
+<script>
+    let grid = [];
+    let shots = [];
+
+    window.onload = function() {
+        createGrid();
+    };
+
+    function createGrid() {
+        let gridElement = document.getElementById('grid');
+        for (let i = 0; i < 10; i++) {
+            grid[i] = [];
+            for (let j = 0; j < 10; j++) {
+                let cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.onclick = () => handleShot(i, j);
+                gridElement.appendChild(cell);
+                grid[i][j] = cell;
+            }
+        }
+    }
+
+    function handleShot(x, y) {
+        shots.push({ x, y });
+        grid[x][y].className = 'cell miss';
+    }
+
+    function fire() {
+        alert("Tirs envoyés : " + JSON.stringify(shots));
+        shots = [];
+    }
+
+</script>
+</body>
+</html>
