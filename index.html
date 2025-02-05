@@ -5,15 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bataille Navale</title>
 <style>
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .grid-container {
+        margin: 10px;
+    }
     .grid {
         display: grid;
-        grid-template-columns: repeat(10, 30px);
+        grid-template-columns: 20px repeat(10, 30px);
         grid-gap: 5px;
+        margin-top: 20px;
     }
     .cell {
         width: 30px;
         height: 30px;
         border: 1px solid black;
+    }
+    .header-cell {
+        width: 30px;
+        height: 30px;
+        text-align: center;
     }
     .hit {
         background-color: red;
@@ -25,39 +38,58 @@
 </head>
 <body>
 <h1>Bataille Navale</h1>
-<div id="grid" class="grid"></div>
+<div class="container">
+    <!-- Créer 10 grilles -->
+    <script>
+        const grids = [];
+        for (let k = 1; k <= 10; k++) {
+            document.write(`<div class="grid-container"><h3>Grille ${k}</h3><div id="grid${k}" class="grid"></div></div>`);
+        }
+    </script>
+</div>
 <button onclick="fire()">Fire!</button>
 
 <script>
-    let grid = [];
-    let shots = [];
+    let grids = [];
+    for (let k = 1; k <= 10; k++) {
+        createGrid(k);
+    }
 
-    window.onload = function() {
-        createGrid();
-    };
+    function createGrid(gridNumber) {
+        let gridElement = document.getElementById(`grid${gridNumber}`);
+        grids[gridNumber] = [];
 
-    function createGrid() {
-        let gridElement = document.getElementById('grid');
+        // Ajouter les légendes des colonnes
+        gridElement.innerHTML += `<div class="header-cell"></div>`;
+        for (let col = 1; col <= 10; col++) {
+            gridElement.innerHTML += `<div class="header-cell">${col}</div>`;
+        }
+        
+        // Ajouter les lignes avec légendes
         for (let i = 0; i < 10; i++) {
-            grid[i] = [];
+            grids[gridNumber][i] = [];
+            gridElement.innerHTML += `<div class="header-cell">${String.fromCharCode(65 + i)}</div>`;
             for (let j = 0; j < 10; j++) {
                 let cell = document.createElement('div');
                 cell.className = 'cell';
-                cell.onclick = () => handleShot(i, j);
+                cell.onclick = () => handleShot(gridNumber, i, j);
                 gridElement.appendChild(cell);
-                grid[i][j] = cell;
+                grids[gridNumber][i][j] = cell;
             }
         }
     }
 
-    function handleShot(x, y) {
-        shots.push({ x, y });
-        grid[x][y].className = 'cell miss';
+    function handleShot(gridNumber, x, y) {
+        let password = prompt("Enter the password:");
+        if (password === "ANTOTO") {
+            grids[gridNumber][x][y].classList.add('miss');
+        } else {
+            alert("Incorrect password!");
+        }
     }
 
     function fire() {
-        alert("Tirs envoyés : " + JSON.stringify(shots));
-        shots = [];
+        alert("Firing function needs implementation.");
     }
 
 </script>
