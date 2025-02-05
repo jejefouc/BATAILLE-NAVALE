@@ -10,7 +10,7 @@
         flex-wrap: wrap;
     }
     .grid-container {
-        margin: 10px;
+        margin: 20px;
     }
     .grid {
         display: grid;
@@ -24,9 +24,12 @@
         border: 1px solid black;
     }
     .header-cell {
+        text-align: center;
         width: 30px;
         height: 30px;
-        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .hit {
         background-color: red;
@@ -38,45 +41,48 @@
 </head>
 <body>
 <h1>Bataille Navale</h1>
-<div class="container">
-    <!-- Créer 10 grilles -->
-    <script>
-        const grids = [];
-        for (let k = 1; k <= 10; k++) {
-            document.write(`<div class="grid-container"><h3>Grille ${k}</h3><div id="grid${k}" class="grid"></div></div>`);
-        }
-    </script>
+<div class="container" id="grids-container">
+    <!-- Les grilles seront générées par JavaScript -->
 </div>
 <button onclick="fire()">Fire!</button>
 
 <script>
-    let grids = [];
-    for (let k = 1; k <= 10; k++) {
-        createGrid(k);
-    }
+    const grids = {};
+
+    window.onload = function() {
+        const gridsContainer = document.getElementById('grids-container');
+        for (let k = 1; k <= 10; k++) {
+            let gridContainer = document.createElement('div');
+            gridContainer.className = 'grid-container';
+            gridContainer.innerHTML = `<h3>Grille ${k}</h3><div id="grid${k}" class="grid"></div>`;
+            gridsContainer.appendChild(gridContainer);
+            createGrid(k);
+        }
+    };
 
     function createGrid(gridNumber) {
-        let gridElement = document.getElementById(`grid${gridNumber}`);
-        grids[gridNumber] = [];
-
-        // Ajouter les légendes des colonnes
+        const gridElement = document.getElementById(`grid${gridNumber}`);
+        const grid = [];
+        
+        // Ajouter la légende pour les colonnes
         gridElement.innerHTML += `<div class="header-cell"></div>`;
         for (let col = 1; col <= 10; col++) {
             gridElement.innerHTML += `<div class="header-cell">${col}</div>`;
         }
         
-        // Ajouter les lignes avec légendes
+        // Ajouter les lignes avec légende
         for (let i = 0; i < 10; i++) {
-            grids[gridNumber][i] = [];
+            grid.push([]);
             gridElement.innerHTML += `<div class="header-cell">${String.fromCharCode(65 + i)}</div>`;
             for (let j = 0; j < 10; j++) {
                 let cell = document.createElement('div');
                 cell.className = 'cell';
                 cell.onclick = () => handleShot(gridNumber, i, j);
                 gridElement.appendChild(cell);
-                grids[gridNumber][i][j] = cell;
+                grid[i].push(cell);
             }
         }
+        grids[gridNumber] = grid;
     }
 
     function handleShot(gridNumber, x, y) {
@@ -91,7 +97,6 @@
     function fire() {
         alert("Firing function needs implementation.");
     }
-
 </script>
 </body>
 </html>
